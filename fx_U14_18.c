@@ -90,22 +90,16 @@ fixed fx_div_64(fixed a, fixed b)
 
 fixed fx_div(fixed a,fixed b)
 {
-	return a/b;
+	return ((fixed)(a/b))>>FX_Q_NUM;
 }
 
-fixed fx_div_reciprocal_1(fixed a, fixed b)
+fixed fx_div_reciprocal(fixed a, fixed b)
 {
 	fixed reciprocal = ((fixed) ((2147483647)/b)<<5); //역수를 구할 떄  1/b가 아닌 미리 2^18을 곱해줌.
 
 	return fx_mul_o(a,reciprocal); 
 }
 
-fixed fx_div_reciprocal_2(fixed a, fixed b)
-{
-	fixed reciprocal = ((2147483647/b)<<5); //오버플로우 방지를 위해 2147493648 이 아닌 2147493647로
-	
-	return (a*reciprocal)>>FX_Q_NUM;
-}
 
 #endif
 

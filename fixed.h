@@ -24,7 +24,6 @@ extern fixed fx_mul_with_integer(fixed a, fixed b);
 extern fixed fx_div_f(fixed a,fixed b);
 extern fixed fx_div(fixed a,fixed b);
 extern fixed fx_div_64(fixed a, fixed b);
-extern fixed fx_div_reciprocal_1(fixed a,fixed b);
-extern fixed fx_div_reciprocal_2(fixed a, fixed b);
+extern fixed fx_div_reciprocal(fixed a,fixed b);
 
 #endif
