@@ -190,6 +190,7 @@ a_F>>2, b_F>>2를 한다면 a_F>>2$\times$b_F>>2 <= $2^{32}-1$로 32bit만 가�
 함수 설명 : 상동
 
 함수 코드 :
+
         fixed fx_mul_64(fixed a, fixed b)
         {
             return ((long long) a * (long long) b) >> FX_Q_NUM;
@@ -202,6 +203,7 @@ a_F>>2, b_F>>2를 한다면 a_F>>2$\times$b_F>>2 <= $2^{32}-1$로 32bit만 가�
 함수 설명 : divisior가 integer라면 최소 19bit이상에 1bit가 위치해있고 18bit shift를 미리 b에 적용하더라도 underflow가 발생하지 않는다. 이러한 특성을 활용하여 1번의 bit shift와 1번의 multiply를 통해 구현하였다.
 
 함수 코드 :
+
         fixed fx_mul_with_integer(fixed a, fixed b)
         {
             return a * (b >> FX_Q_NUM);
@@ -214,6 +216,7 @@ a_F>>2, b_F>>2를 한다면 a_F>>2$\times$b_F>>2 <= $2^{32}-1$로 32bit만 가�
 함수 설명 : dividend를 부동소숫점으로 변환하므로 매우 큰 범위를 표현할 수 있게 되었고 높은 정확도를 보이나 고정소숫점 내에서 연산을 구현하고자 하는 우리의 취지와 부합하지 않는 함수이다.
 
 함수 코드 :
+
         fixed fromFloat(float f)
         {
             fixed ret;
@@ -297,5 +300,7 @@ fixed type에서 1.0은 1000000000000000000이고 이를 13bitshift하면 214748
             return b==0 ? 0 :((fixed)(a/b))>>FX_Q_NUM;
         }
 
+## 성능 profiling
+> 주요 방법론 : Python으로 미리 계산한 값과 위의 연산들을 통해 계산한 값을 비교
 
 
