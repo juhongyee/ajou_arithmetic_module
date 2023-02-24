@@ -47,7 +47,7 @@ $[00000000000000].[000000000000000000]$
 
 함수 정의 : fixed형을 float 형으로 변환하는 함수
 
-함수 설명 : fixed x를 $2^18.0f$로 나눔으로써 강제로 float형으로 변환시키는 함수
+함수 설명 : fixed x를 $2^{18}.0f$로 나눔으로써 강제로 float형으로 변환시키는 함수
 
 함수코드
 
@@ -103,5 +103,47 @@ Without Lose Of Generality
 add의 +를 -로 대체
 
 ## 2) multiplication
+
+### fx_mul_o
+**Precision과 Speed를 동시에 만족하는 함수**
+
+함수 정의 : Integer와 Floating point를 나누어 계산하는 multiplication 함수
+
+함수 설명 : 곱하기연산이 underflow와 overflow에 취약한 점을 개선하고자 고안된 multiplication 함수이며 bitshift와 곱하기 연산만을 사용하므로 충분한 속도를 보장받는다.
+
+### 1. Integer와 Floating 분리
+a와 b를 입력받았을 때
+
+a>>18 연산을 할 경우 a의 Integer part만 남음.
+b>>18 연산도 마찬가지
+
+(a<<14)>>14 연산을 할 경우 a의 Floating part만 남음.
+(b<<14)>>14 연산도 마찬가지
+
+### 2. Integer와 Floating의 연산
+
+간단한 인수분해 공식을 떠올려보자.
+현재 a라는 수를 a_I와 a_F라는 정수와 소수로 나눈 상태이다.
+
+즉, a = a_I+a_F.
+
+b도 마찬가지로
+
+b = b_I+b_F라고 할 수 있다.
+
+이 때 **ab = (a_I + a_F)(b_I + b_F) = a_I$\times$b_I + a_F$\times$b_I + a_I$\times$b_F + a_F$\times$b_F** 로 쓸 수 있다.
+
+1. a_I$\times$b_I : 두 Integer를 곱하는 연산을 그냥 해주게 되면 현재 우측으로 18bit 이동한 상태이기 때문에 다시 좌측으로 18bit 이동해주어야 한다. 
+즉 (a_I$\times$b_I)<<18로 구현 된다.
+
+**위와 같이 Integer part를 우측 끝까지 bit shift를 해줌으로 overflow를 최대한 방지한채로 연산이 가능하다.**
+
+2. a_F$\times$b_I + a_I$\times$b_F : Integer들은 우측 끝까지 bit shift 되어 있으나 a_F와 b_F는 $2^{18}$이 곱해진 것과 같으므로 그냥 그대로 a_F$\times$b_I + a_I$\times$b_F 와 같이 구현하면 된다.
+
+3. **a_F$\times$b_F**
+가장 문제가 되는 부분이다. 그냥 연산을 하게 되면 연산의 정확도가 매우 떨어지게 된다. 
+
+왜냐하면 a_F와 b_F는 각각 18개의 bit로 표현되어 있기 때문이다. a_F와 b_F를 fixed의 float부분이 아닌 그냥 unsigned integer로 간주한다면 a_F,b_F<=$2^{18}-1$이다. 이 때 두 수를 곱하면 a_F$\times$b_F <= 2^{36}-1 부등식이 성립함을 알 수 있고 즉 35bit가 필요하다는 결론을 얻는다.(overflow)
+
 
 
