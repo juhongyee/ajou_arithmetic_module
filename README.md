@@ -303,4 +303,31 @@ fixed type에서 1.0은 1000000000000000000이고 이를 13bitshift하면 214748
 ## 성능 profiling
 > 주요 방법론 : Python으로 미리 계산한 값과 위의 연산들을 통해 계산한 값을 비교
 
+### Pricision test
+1. python으로 0~65 이내의 random number 10000000개 생성하여 random_list.txt에 저장(overflow를 배제하고 Precision을 보기 위함.)
 
+2. 앞에서부터 차례로 두 값들에 대해 add,product,division 연산을 시행한후 각 결과를 txt파일에 저장
+
+3. 위의 정의한 연산들을 시행하여 python에서의 결과와 비교
+
+### Speed test
+
+1. 앞서 만든 random number들을 각 연산에 대해 계산하여 profiling함.
+
+### Precision test
+#### allowed error = 0.0001
+|add|mul_o|mul_f|mul_64|div_f|div|div_64|div_reciprocal|
+|---|---|---|---|---|---|---|---|
+|99.99%|77.74%|79.99%|79.77%|100%|0.005%|100%|69.74%|
+
+### Speed test
+
+#### -m32
+|add|mul_o|mul_f|mul_64|div_f|div|div_64|div_reciprocal|
+|---|---|---|---|---|---|---|---|
+|1.82s|2.6s|12.24s|1.56s|10.94s|0.00s|0.52s|3.52s|
+
+#### -m64
+|add|mul_o|mul_f|mul_64|div_f|div|div_64|div_reciprocal|
+|---|---|---|---|---|---|---|---|
+|6.90s|3.835s|4.98s|0.00s|3.83s|2.30s|1.07s|4.3s|
