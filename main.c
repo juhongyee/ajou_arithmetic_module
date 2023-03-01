@@ -7,7 +7,7 @@
 int main()
 {
 #if PRECISION_TEST
-#define NUM_DATA 99999
+#define NUM_DATA 9999999
 	extern int toBinaryString(char buf[],int a);
 
 	FILE *f_num; //test 숫자리스트를 받아오는 file pointer
@@ -15,12 +15,10 @@ int main()
 	FILE *f_product_ans; //곱셈 연산의 결과를 받아오는 file pointer
 	FILE *f_division_ans; //나눗셈 연산의 결과를 받아오는 file pointer
 
-	char buf[1024];
-
-	float num_list[NUM_DATA+1];
-	float ans_plus[NUM_DATA];
-	float ans_product[NUM_DATA];
-	float ans_division[NUM_DATA];
+	float* num_list = (float*)malloc(sizeof(float)*(NUM_DATA+1));
+	float* ans_plus = (float*)malloc(sizeof(float)*(NUM_DATA));
+	float* ans_product = (float*)malloc(sizeof(float)*(NUM_DATA));
+	float* ans_division = (float*)malloc(sizeof(float)*(NUM_DATA));
 
 	f_num = fopen("./random_list2.txt","r");
 	f_plus_ans = fopen("./plus_answer2.txt","r");
@@ -42,7 +40,7 @@ int main()
 	}
 	fscanf(f_num,"%f",num_list+NUM_DATA); //number은 index가 하나 많음.
 	
-	float allow_error = 0.01;
+	float allow_error = 0.001;
 	
 	int add_count = 0;
 	int mul_f_count = 0;
@@ -90,7 +88,11 @@ int main()
 	}
 
 	printf("add: %d mul_f : %d mul_o : %d mul_64 : %d div_f : %d div : %d div_64 : %d div_reciprocal : %d\n",add_count,mul_f_count,mul_o_count,mul_64_count,div_f_count,div_count,div_64_count,div_reciprocal_count);
-
+	
+	free(num_list);
+	free(ans_plus);
+	free(ans_product);
+	free(ans_division);
 #endif
 
 #if SPEED_TEST
@@ -100,7 +102,7 @@ int main()
 #if DEBUG
 	printf("0\n");
 #endif
-	f_num = fopen("./random_list2.txt","r");
+	f_num = fopen("./random_list3.txt","r");
 	
 	//FILE CHECK
 	if(f_num == NULL)
@@ -141,7 +143,7 @@ int main()
 		{
 			fixed fx = fromFloat(num_list[j]);
 			fixed gx = fromFloat(num_list[j+1]);
-			gx==0 ? :fp[i](fx,gx);
+			fp[i](fx,gx);
 		}
 	}
 #if DEBUG

@@ -7,6 +7,8 @@
 #define FX_I_NUM	14
 #define FX_Q_NUM    18		// bits number below point
 #define FX_Q_FVAL 262144.0f
+#define FX_MUL_OPTIMIZATION (((((a)<<(FX_I_NUM))>>(FX_I_NUM)>>(FX_Q_NUM)*(b)>>(FX_Q_NUM))<<(FX_Q_NUM))+((a)<<(FX_I_NUM))>>(FX_I_NUM)>>(FX_Q_NUM)*((b)<<(FX_I_NUM))>>(FX_I_NUM)+(b)>>(FX_Q_NUM)*((a)<<(FX_I_NUM))>>(FX_I_NUM)+(((((a)<<(FX_I_NUM))>>(FX_I_NUM)>>(2))*(((b)<<(FX_I_NUM))>>(FX_I_NUM)>>(2)))>>(FX_I_NUM)))
+
 
 fixed fx_mul_o(fixed a, fixed b)
 {
@@ -44,7 +46,7 @@ fixed fromFloat(float f)
 
 float toFloat(fixed x)
 { 
-	return (float) (x/FX_Q_FVAL);
+	return (x/FX_Q_FVAL);
 }
 
 fixed add(fixed num_args, ...)
@@ -80,21 +82,24 @@ fixed minus(fixed num_args, ...)
 
 fixed fx_div_f(fixed a,fixed b)
 {
-	return (fixed) (FX_Q_FVAL * (float)a / (float) b);
+
+	return b==0 ?0 : (fixed) (FX_Q_FVAL * (float)a / (float) b);
 }
 
 fixed fx_div_64(fixed a, fixed b)
 {
-	return (fixed)(((long long)a<<FX_Q_NUM)/b);
+	return  b==0 ? 0 :(fixed)(((long long)a<<FX_Q_NUM)/b);
 }
 
 fixed fx_div(fixed a,fixed b)
 {
-	return ((fixed)(a/b))>>FX_Q_NUM;
+	return b==0 ? 0 :((fixed)(a/b))>>FX_Q_NUM;
 }
 
 fixed fx_div_reciprocal(fixed a, fixed b)
 {
+	if(b==0) return 0;
+
 	fixed reciprocal = ((fixed) ((2147483647)/b)<<5); //역수를 구할 떄  1/b가 아닌 미리 2^18을 곱해줌.
 
 	return fx_mul_o(a,reciprocal); 
