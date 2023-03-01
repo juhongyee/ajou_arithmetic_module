@@ -306,28 +306,44 @@ fixed type에서 1.0은 1000000000000000000이고 이를 13bitshift하면 214748
 ### Pricision test
 1. python으로 0~65 이내의 random number 10000000개 생성하여 random_list.txt에 저장(overflow를 배제하고 Precision을 보기 위함.)
 
-2. 앞에서부터 차례로 두 값들에 대해 add,product,division 연산을 시행한후 각 결과를 txt파일에 저장
+2. 함수 pointer로 함수들을 저장한 후 앞에서부터 차례로 두 값들에 대해 add,product,division 연산을 시행한후 각 결과를 txt파일에 저장
 
 3. 위의 정의한 연산들을 시행하여 python에서의 결과와 비교
 
-### Speed test
+### Speed test with overflow
+overflow를 배제한다면 64bit와 32bit에서의 long long type 연산 시간의 차이가 보이지 않을 수 있기 때문에 **overflow가 날 수 있는 test set**에 대하여 위의 speed test를 시행
 
-1. 앞서 만든 random number들을 각 연산에 대해 계산하여 profiling함.
+**test set : 0~256사이의 실수 10000000개**
+
+1. 위의 함수 정의에 정의한 함수들을 앞에서부터 차례대로 2개의 숫자씩 연산함.
+
+2. cc -pg와 gpof를 이용하여 profiling함으로 각 함수마다 소요 시간을 추적
 
 ### Precision test
+#### allowed error = 0.01
+|add|mul_o|mul_f|mul_64|div_f|div|div_64|div_reciprocal|
+|---|---|---|---|---|---|---|---|
+|99.99%|100%|100%|100%|100%|0.005%|100%|100%|
+
+#### allowed error = 0.001
+|add|mul_o|mul_f|mul_64|div_f|div|div_64|div_reciprocal|
+|---|---|---|---|---|---|---|---|
+|99.99%|100%|100%|100%|100%|0.0005%|100%|38.944%|
+
 #### allowed error = 0.0001
 |add|mul_o|mul_f|mul_64|div_f|div|div_64|div_reciprocal|
 |---|---|---|---|---|---|---|---|
-|99.99%|77.74%|79.99%|79.77%|100%|0.005%|100%|6.974%|
+|99.99%|77.74%|79.99%|79.77%|100%|0.00005%|100%|6.974%|
 
-### Speed test
-
+### Speed test with overflow
 #### -m32
 |add|mul_o|mul_f|mul_64|div_f|div|div_64|div_reciprocal|
 |---|---|---|---|---|---|---|---|
-|1.82s|2.6s|12.24s|1.56s|10.94s|0.00s|0.52s|3.52s|
+|0.07s|0.04s|0.40s|0.08s|0.48s|0.02s|0.03s|0.07s|
 
 #### -m64
 |add|mul_o|mul_f|mul_64|div_f|div|div_64|div_reciprocal|
 |---|---|---|---|---|---|---|---|
-|6.90s|3.835s|4.98s|0.00s|3.83s|2.30s|1.07s|4.3s|
+|0.06s|0.065s|0.06s|0.00s|0.03s|0.05s|0.06s|0.06s|
+
+### 결론
