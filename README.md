@@ -3,7 +3,6 @@
 ### 202021223
 
 * unsigned, Floating 18bit, Integer 14
-* **multiplication의 fx_mul_o 함수와 division의 fx_div_reciprocal 함수를 집중적으로 봐주셨으면 좋겠습니다. 많은 노력이 들어간 함수입니다.**
 
 ## 1. Fixed point
 fixed point는 고정소수점이라는 의미로, 컴퓨터에서 실수를 표현할 때 Integer bit와 Floating bit를 고정하여 정하여 실수를 표현하는 방식이다.
